@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kalypto — Publications</title>
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; base-uri 'none'; form-action 'none'">
+<style>
+  :root{
+    --ink:#16191d; --paper:#ffffff; --soft:#6b6f76; --rule:#d8d3c8; --link:#2d4a7c;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{ --ink:#fafafa; --paper:#0d0d0d; --soft:#a8a8a8; --rule:#282828; --link:#8fb8d4; }
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; padding:3rem 1.5rem; background:var(--paper); color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;
+    font-size:17px; line-height:1.6; -webkit-text-size-adjust:100%;
+  }
+  main{max-width:38rem; margin:0 auto}
+  h1{font-size:1.75rem; line-height:1.25; margin:0 0 .25rem; font-weight:600; letter-spacing:-.01em}
+  .sub{color:var(--soft); margin:0 0 2.5rem; font-size:1rem}
+  h2{font-size:1.1rem; font-weight:600; margin:2rem 0 .3rem}
+  h3{font-size:.8rem; text-transform:uppercase; letter-spacing:.09em; color:var(--soft);
+     font-weight:600; margin:1.1rem 0 .5rem}
+  p{margin:0 0 1rem}
+  ul{list-style:none; padding:0; margin:0}
+  li{margin:0 0 .45rem}
+  a{color:var(--link)}
+  a:focus-visible{outline:2px solid var(--link); outline-offset:2px}
+  .fmt{color:var(--soft)}
+  footer{margin-top:3rem; padding-top:1.25rem; border-top:1px solid var(--rule);
+         color:var(--soft); font-size:.875rem}
+  footer p{margin:0 0 .5rem}
+</style>
+</head>
+<body>
+<main>
+
+  <h1>Kalypto</h1>
+  <p class="sub">On-premise appliance for reversible pseudonymisation. Publications about the
+  product, in Italian and English.</p>
+
+  <h2>How the system works <span class="fmt">&middot; v. 1.10</span></h2>
+  <h3>Italiano</h3>
+  <ul>
+    <li><a href="how-it-works/it.html">Leggi il documento</a> <span class="fmt">&middot; HTML</span></li>
+    <li><a href="how-it-works/it.pdf">Scarica il PDF</a></li>
+  </ul>
+  <h3 lang="en">English</h3>
+  <ul lang="en">
+    <li><a href="how-it-works/en.html">Read the document</a> <span class="fmt">&middot; HTML</span></li>
+    <li><a href="how-it-works/en.pdf">Download the PDF</a></li>
+  </ul>
+
+  <footer>
+    <p>UnmarkedPM &amp; iride.ch SA.</p>
+    <p>Sources: <a href="https://github.com/UnmarkedPM/kalypto">github.com/UnmarkedPM/kalypto</a></p>
+  </footer>
+
+</main>
+</body>
+</html>

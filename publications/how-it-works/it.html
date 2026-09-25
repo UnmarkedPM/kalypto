@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="it" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kalypto</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;680&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script>
+/* tema iniziale prima del primo paint: nessun lampo */
+(function(){try{var t=localStorage.getItem('unmarked-theme');if(t==='light'||t==='dark'){document.documentElement.setAttribute('data-theme',t);}}catch(e){}})();
+</script>
+<style>
+  /* ============================================================
+     UnmarkedPM — pelle bitematica.
+     Grigi di brand, unici ammessi oltre al nero:
+       #0D0D0D · #1A1A1A · #282828 · #E5E5E5 · #FAFAFA
+     Accenti semantici, solo per grafica, chip, callout, link —
+     mai per le titolazioni:
+       pass #6C9A57 · warn #C79A3C · fail #CF6552 · accent #4B6A86
+     Tema scuro di default; tema chiaro via [data-theme=light];
+     la stampa forza sempre il chiaro, qualunque sia lo stato del toggle.
+     Nessun border-radius in nessun componente.
+     ============================================================ */
+  :root{
+    --ink:#FAFAFA; --paper:#0D0D0D; --rule:#282828; --soft:#E5E5E5;
+    --surf:#1A1A1A; --surf-2:#282828; --chip:#282828; --ref:#E5E5E5;
+    --pass:#6C9A57; --warn:#C79A3C; --fail:#CF6552; --accent:#4B6A86;
+    --accent-txt:#8FB3D0;
+    --fig-ink:#FAFAFA; --fig-soft:#E5E5E5; --fig-rule:#282828; --fig-surf:#1A1A1A;
+    --mono:'Space Grotesk','SF Mono',ui-monospace,'JetBrains Mono',Menlo,Consolas,monospace;
+    --sans:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;
+    --display:'Space Grotesk','Inter',-apple-system,system-ui,sans-serif;
+  }
+  html[data-theme="light"]{
+    --ink:#0D0D0D; --paper:#FAFAFA; --rule:#282828; --soft:#282828;
+    --surf:#FAFAFA; --surf-2:#E5E5E5; --chip:#E5E5E5; --ref:#282828;
+    --accent-txt:#39566E;
+    --fig-ink:#0D0D0D; --fig-soft:#282828; --fig-rule:#282828; --fig-surf:#FAFAFA;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0;background:var(--paper);color:var(--ink);
+    font-family:var(--sans);font-size:14px;line-height:1.62;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:760px;margin:0 auto;padding:0 26px}
+
+  /* ---- toggle di tema ---- */
+  .tt{position:fixed;top:18px;right:18px;z-index:20;width:34px;height:34px;
+    display:flex;align-items:center;justify-content:center;cursor:pointer;
+    background:var(--surf);color:var(--soft);border:1px solid var(--rule);padding:0}
+  .tt:hover{color:var(--ink);border-color:var(--soft)}
+  .tt svg{width:16px;height:16px;display:block}
+  .tt .i-sun{display:none} .tt .i-moon{display:block}
+  html[data-theme="light"] .tt .i-sun{display:block}
+  html[data-theme="light"] .tt .i-moon{display:none}
+
+  /* ---- masthead ---- */
+  header.mast{border-bottom:2px solid var(--ink);margin-top:44px;padding-bottom:20px}
+  .kicker{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--soft)}
+  h1{font-family:var(--display);font-size:34px;line-height:1.08;letter-spacing:-.02em;margin:.3em 0 .3em;font-weight:600}
+  .dek{font-size:16px;color:var(--soft);max-width:64ch;margin:0}
+  .meta{font-family:var(--mono);font-size:12.5px;color:var(--soft);margin-top:18px;
+    display:flex;flex-wrap:wrap;gap:5px 20px}
+
+  /* ---- tipografia ---- */
+  h2{font-size:22px;font-family:var(--display);letter-spacing:.03em;text-transform:uppercase;color:var(--ink);
+     margin:58px 0 0;padding-bottom:8px;border-bottom:1px solid var(--rule);font-weight:600}
+  h3{font-family:var(--display);font-size:18px;letter-spacing:-.005em;margin:32px 0 .3em;font-weight:600}
+  p{margin:.85em 0}
+  .lead{font-size:15px}
+  a{color:var(--accent-txt);text-decoration-thickness:1px;text-underline-offset:2px}
+  strong{font-weight:640;color:var(--ink)}
+  code{font-family:var(--mono);font-size:.88em;background:var(--chip);padding:.08em .34em}
+  .small{font-size:12.5px;color:var(--soft)}
+  .refs{font-size:12.5px;color:var(--ref);margin:8px 0 20px}
+  .refs p{margin:.5em 0;padding-left:18px;text-indent:-18px;line-height:1.5}
+
+  /* ---- indice ---- */
+  nav.toc{font-family:var(--mono);font-size:12.5px;margin:36px 0;columns:2;column-gap:32px}
+  nav.toc a{display:block;color:var(--ink);text-decoration:none;padding:3px 0;border-bottom:1px solid transparent}
+  nav.toc a:hover{border-bottom-color:var(--rule);color:var(--accent-txt)}
+  nav.toc .num{color:var(--soft);margin-right:9px}
+
+  /* ---- callout ---- */
+  .note{border-left:3px solid var(--accent);background:var(--surf);padding:15px 19px;margin:26px 0}
+  .note.limit{border-left-color:var(--warn)}
+  .note .lbl{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--soft);display:block;margin-bottom:5px}
+  .note p{margin:.4em 0}
+
+  /* ---- verdetto ---- */
+  .verdict{border-left:3px solid var(--pass);background:var(--surf);padding:15px 19px;margin:26px 0}
+  .verdict .lbl{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--pass);display:block;margin-bottom:5px}
+  .verdict p{margin:.4em 0}
+
+  /* ---- tabelle ---- */
+  table{width:100%;border-collapse:collapse;margin:24px 0;font-size:12.5px}
+  th,td{text-align:left;padding:8px 11px;border-bottom:1px solid var(--rule);vertical-align:top}
+  th{font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;
+    color:var(--soft);font-weight:600}
+  td.num{font-family:var(--mono);text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+
+  /* ---- numeri chiave: boxing per soli bordi, nessun fondo, nessun raggio.
+         flex e non grid: WeasyPrint non implementa grid. ---- */
+  .stats{display:flex;flex-wrap:wrap;border:1px solid var(--rule);
+    border-top-width:0;border-left-width:0;margin:28px 0}
+  .stat{flex:1 1 0;min-width:112px;padding:16px 17px 14px;border-top:1px solid var(--rule);border-left:1px solid var(--rule)}
+  .stat .n{font-family:var(--mono);font-size:24px;font-weight:600;letter-spacing:-.02em;line-height:1}
+  .stat .l{font-size:12px;color:var(--soft);margin-top:6px;line-height:1.35}
+  .stat .n.pass{color:var(--pass)} .stat .n.fail{color:var(--fail)} .stat .n.warn{color:var(--warn)}
+
+  /* ---- figure ---- */
+  figure{margin:32px 0;padding:0}
+  figure svg{display:block;width:100%;height:auto;background:var(--fig-surf);border:1px solid var(--rule)}
+  figcaption{font-size:12.5px;color:var(--soft);margin-top:9px}
+  figcaption b{color:var(--ink);font-weight:600}
+
+  /* ---- footer ---- */
+  footer{margin:74px 0 56px;padding-top:22px;border-top:2px solid var(--ink);font-size:12.5px;color:var(--soft)}
+  footer .mono{font-family:var(--mono);font-size:11.5px}
+
+  @media (max-width:620px){nav.toc{columns:1}.meta{display:block}.meta span{display:block}}
+
+  @media print{
+    /* la stampa è sempre chiara, qualunque sia il tema selezionato */
+    :root, html[data-theme="dark"], html[data-theme="light"]{
+      --ink:#0D0D0D; --paper:#FAFAFA; --rule:#282828; --soft:#282828;
+      --surf:#FAFAFA; --surf-2:#E5E5E5; --chip:#E5E5E5; --ref:#282828;
+      --accent-txt:#39566E;
+      --fig-ink:#0D0D0D; --fig-soft:#282828; --fig-rule:#282828; --fig-surf:#FAFAFA;
+    }
+    @page{size:A4;margin:16mm 13mm;background:#FAFAFA}
+    body{background:#FAFAFA;color:#0D0D0D;font-size:9.6pt;line-height:1.5}
+    /* 2mm di respiro: al bordo esatto del box di pagina le lettere con
+       sporgenza sinistra (Space Grotesk maiuscolo) vengono tagliate */
+    .wrap{max-width:none;padding:0 2mm}
+    .tt{display:none}
+    h1{font-size:24pt} h2{font-size:13pt;margin-top:22pt} h3{font-size:11pt}
+    .dek{font-size:11pt} .lead{font-size:10.2pt}
+    table{font-size:8.4pt} th{font-size:7.6pt}
+    .stat .n{font-size:15pt}
+    a{color:#0D0D0D}
+    h2{break-after:avoid} h3{break-after:avoid}
+    p{orphans:3;widows:3}
+    figure{break-inside:avoid} figcaption{break-before:avoid}
+    p + figure{break-before:avoid}
+    .note,.verdict,.stats,table,tr,nav.toc{break-inside:avoid}
+  }
+</style>
+</head>
+<body>
+
+<button class="tt" id="tt" type="button" aria-label="Alterna tema chiaro e scuro" title="Tema chiaro / scuro">
+  <svg class="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5z"/></svg>
+  <svg class="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="4.2"/><path d="M12 2v2.6M12 19.4V22M2 12h2.6M19.4 12H22M4.9 4.9l1.9 1.9M17.2 17.2l1.9 1.9M19.1 4.9l-1.9 1.9M6.8 17.2l-1.9 1.9"/></svg>
+</button>
+
+<div class="wrap">
+
+<header class="mast">
+  <div class="kicker">KALYPTO · PSEUDONIMIZZAZIONE REVERSIBILE</div>
+  <h1>Kalypto</h1>
+  <p class="dek">Sistema on-premise che prepara documenti sensibili all'elaborazione con modelli linguistici esterni. Che cosa fa e in che modo.</p>
+  <div class="meta"><span>Oggetto: Funzionamento del sistema</span><span>Versione: 1.10</span><span>Autore: Team HITL &amp; AI</span></div>
+</header>
+
+<nav class="toc" aria-label="Indice">
+<a href="#s1"><span class="num">01</span>Che cos&#x27;è Kalypto</a>
+<a href="#s2"><span class="num">02</span>Il lavoro sensibile avviene offline</a>
+<a href="#s3"><span class="num">03</span>Dal documento originale alla versione pseudonimizzata</a>
+<a href="#s4"><span class="num">04</span>Pseudonimizzare senza rendere inutile il documento</a>
+<a href="#s5"><span class="num">05</span>Che cosa contiene l&#x27;artefatto</a>
+<a href="#s6"><span class="num">06</span>L&#x27;elaborazione con un modello esterno</a>
+<a href="#s7"><span class="num">07</span>Il ritorno nel Caso</a>
+<a href="#s8"><span class="num">08</span>Un unico processo, anche quando una parte avviene fuori</a>
+<a href="#s9"><span class="num">09</span>Pseudonimizzazione non significa anonimizzazione assoluta</a>
+<a href="#s10"><span class="num">10</span>Glossario</a>
+</nav>
+
+<h2 id="s1">01 · Che cos'è Kalypto</h2>
+<p class="lead">Kalypto è un sistema on-premise che prepara documenti sensibili all'elaborazione da parte di modelli linguistici esterni senza che i dati originali lascino l'appliance su cui è installato.</p>
+<p>Il meccanismo centrale è la pseudonimizzazione reversibile: Kalypto individua le informazioni sensibili contenute nel documento e le sostituisce con valori alternativi coerenti con il contesto. La versione così ottenuta può essere impiegata per l'elaborazione esterna, mentre i dati originali e le informazioni necessarie a ricondurre i surrogati alle identità reali restano in locale.</p>
+<p>Il lavoro è organizzato per Casi. Un Caso tiene insieme i documenti originali, le loro rappresentazioni interne, le sostituzioni effettuate, la mappa necessaria al ripristino, gli artefatti esportati e i documenti elaborati che rientrano successivamente nel sistema.</p>
+<h2 id="s2">02 · Il lavoro sensibile avviene offline</h2>
+<p>Per principio strutturale del sistema, tutta l'elaborazione che riguarda i dati sensibili avviene offline e on-premise, interamente all'interno dell'appliance Kalypto.</p>
+<p>I modelli impiegati per analizzare il documento, gli strumenti della catena di elaborazione, il sistema di pseudonimizzazione, il vault — l'archivio locale delle corrispondenze — e l'interfaccia di gestione sono eseguiti sull'appliance.</p>
+<p>L'appliance non dispone di alcuna connessione verso servizi esterni. L'utente estrae il materiale pseudonimizzato tramite l'apposita interfaccia e lo consegna, per propria decisione, al servizio o al contenitore che intende impiegare.</p>
+<h2 id="s3">03 · Dal documento originale alla versione pseudonimizzata</h2>
+<p>Quando un documento entra in un Caso, Kalypto ne costruisce una rappresentazione strutturata: non soltanto le parole che contiene, ma la loro posizione e la loro relazione con la struttura del documento.</p>
+<p>Su questa rappresentazione vengono individuate le informazioni che possono richiedere protezione. L'analisi procede per livelli: regole deterministiche per i dati riconoscibili da una struttura precisa, riconoscitori di entità per le informazioni identificabili dal significato e, nei casi ancora ambigui, un modello linguistico eseguito in locale. Le rilevazioni dei diversi livelli vengono poi composte in un esito unico, prima che una sostituzione sia considerata definitiva.</p>
+<p>Il modello linguistico locale non riscrive il documento. Interviene soltanto dove occorre classificare o distinguere informazioni che i livelli precedenti non risolvono con sufficiente affidabilità; la sostituzione finale resta deterministica.</p>
+<p>Kalypto tratta inoltre i quasi-identificatori: informazioni che da sole possono non essere sufficienti a identificare una persona, ma che combinate fra loro aumentano il rischio di re-identificazione. I quasi-identificatori vengono segnalati tramite avvisi e restano sotto il controllo dell'operatore.</p>
+<h2 id="s4">04 · Pseudonimizzare senza rendere inutile il documento</h2>
+<p>Eliminare un nome o oscurare una serie di valori protegge l'informazione, ma impoverisce il documento fino a comprometterne l'utilità: il testo perde i riferimenti su cui si regge e con essi la possibilità di essere elaborato.</p>
+<p>Kalypto segue un approccio diverso. Le informazioni sensibili sono sostituite con surrogati realistici e coerenti con il contesto: un nome con un altro nome plausibile, un'organizzazione con un'altra organizzazione, un identificatore strutturato con un valore formalmente compatibile.</p>
+<p>Dove necessario sono conservate caratteristiche quali genere, numero, forma abbreviata, titolo, struttura nome-cognome, formato delle date e proprietà specifiche degli identificatori. Il testo mantiene così le relazioni grammaticali e documentali necessarie alla propria elaborazione.</p>
+<p>Anche la generazione dei surrogati avviene in locale ed è deterministica: la stessa entità è trattata in modo coerente all'interno dello stesso Caso e la relazione tra surrogato e dato originale resta disponibile per il ripristino.</p>
+<p>Il risultato non è un documento ripulito, ma una versione che ha perso l'accesso diretto alle informazioni originali senza perdere il contesto necessario al lavoro.</p>
+<h2 id="s5">05 · Che cosa contiene l'artefatto</h2>
+<p>Durante la pseudonimizzazione Kalypto registra nel vault, per ogni dato sostituito, la corrispondenza con il surrogato che lo rappresenta. Il vault appartiene al Caso e resta nell'appliance.</p>
+<p>L'artefatto che l'utente estrae contiene la sola versione pseudonimizzata del documento: nessun dato originale, nessuna porzione della mappa, nessun elemento che consenta di ricondurre automaticamente i surrogati alle identità reali. Il ripristino è possibile soltanto rientrando nel Caso.</p>
+<h2 id="s6">06 · L'elaborazione con un modello esterno</h2>
+<p>La versione pseudonimizzata può essere impiegata con un modello esterno per le attività che non richiedono la conoscenza delle identità reali: analisi, sintesi, traduzione, confronto, riorganizzazione del contenuto e altre trasformazioni documentali.</p>
+<p>Kalypto non presuppone però che il servizio esterno restituisca il testo, l'ordine e la forma dei surrogati come li ha ricevuti. Un modello linguistico può parafrasare una frase, accorciare un nome, modificare un riferimento, spostare un'informazione, fondere più passaggi in uno solo o cambiare il formato del documento.</p>
+<p>Il servizio esterno è quindi trattato come un canale di trasformazione non affidabile: il ripristino non può dipendere dal fatto che il modello conservi marcatori o rispetti istruzioni. Deve funzionare indipendentemente dalla forma in cui il documento rientra; il compito ricade interamente sul meccanismo di ritorno nel Caso.</p>
+<h2 id="s7">07 · Il ritorno nel Caso</h2>
+<p>Il documento elaborato all'esterno viene ricaricato dall'utente nello stesso Caso da cui proviene.</p>
+<p>Kalypto riconosce allora i riferimenti pseudonimizzati e li associa alle entità conservate nel vault. L'operazione è una riconciliazione vincolata: ogni riferimento va associato a una delle entità note del Caso, oppure dichiarato non sufficientemente riconoscibile. Non è prevista l'attribuzione a entità che non appartengono al Caso.</p>
+<p>La riconciliazione procede dai metodi più semplici verso quelli che richiedono elaborazioni più complesse. Una corrispondenza esatta si risolve immediatamente. Dove il servizio esterno ha modificato il testo intervengono alias, informazioni morfologiche, struttura del documento, allineamento fra blocchi e misure di similarità. Solo i casi residui richiedono strumenti più complessi.</p>
+<p>Quando la corrispondenza raggiunge un'affidabilità sufficiente, il vault consente la sostituzione inversa: il surrogato torna a essere il dato originale. Il contenuto prodotto dal sistema esterno resta com'è; sono ripristinati i riferimenti che lo rendono utilizzabile nel contesto reale.</p>
+<h2 id="s8">08 · Un unico processo, anche quando una parte avviene fuori</h2>
+<p>Il ciclo completo, dal documento originale al ripristino:</p>
+<figure><svg aria-label="Il ciclo di lavorazione di un documento: quattro passaggi locali, un passaggio esterno, tre passaggi di rientro." viewBox="0 0 880 372" xmlns="http://www.w3.org/2000/svg" role="img" preserveAspectRatio="xMidYMid meet"><defs><marker id="ah" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L8,4 L0,8 z" fill="var(--fig-soft)"/></marker><marker id="aha" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L8,4 L0,8 z" fill="var(--accent)"/></marker></defs><line x1="672" y1="26" x2="672" y2="350" stroke="var(--fig-rule)" stroke-width="1" stroke-dasharray="5 4"/><text x="662" y="20" font-family="Space Grotesk, SF Mono, ui-monospace, monospace" font-size="10" fill="var(--fig-soft)" text-anchor="end" font-weight="400">APPLIANCE KALYPTO</text><text x="682" y="20" font-family="Space Grotesk, SF Mono, ui-monospace, monospace" font-size="10" fill="var(--fig-soft)" text-anchor="start" font-weight="400">ESTERNO</text><rect x="20" y="62" width="145" height="48" fill="none" stroke="var(--fig-ink)" stroke-width="1"/><text x="92.5" y="82.3" font-family="Space Grotesk, SF Mono, ui-monospace, monospace" font-size="11.5" fill="var(--fig-ink)" text-anchor="middle" font-weight="500">Documento</text><text x="92.5" y="97.3" font-family="Space Grotesk, SF Mono, ui-monospace, monospace" font-size="11.5" fill="var(--fig-ink)" text-anchor="middle" font-weight="500">originale</text><rect x="180" y="62" width="145" height="48" fill="none" stroke="var(--fig-ink)" stroke-width="1"/><text x="252.5" y="82.3" font-family="Space Grotesk, SF Mono, ui-monospace, monospace" font-size="11.5" fill="var(--fig-ink)" text-anchor="middle" font-weight="500">Analisi</text><text x="252.5" y="97.3" font-family="Space Grotesk, SF Mono, ui-monospace, monospace" font-size="11.5" fill="var(--fig-ink)" text-anchor="middle" font-weight="500">locale</text><rect x="340" y="62" width="145" height="48" fill="none" stroke="var(--fig-ink)" stroke-width="1"/><text x="412.5" y="90.3" font-family="Space Grotesk, SF Mono, ui-monospace, monospace" font-size="11.5" fill="var(--fig-ink)" text-anchor="middle" font-weight="500">Pseudonimizzazione</text><rect x="500" y="62" width="145" height="48" fill="none" stroke="var(--fig-ink)" stroke-width="1"/><text x="572.5" y="82.3" font-family="Space Grotesk, SF Mono, ui-monospace, monospace" font-size="11.5" fill="var(--fig-ink)" text-anchor="middle" font-weight="500">Estrazione</text><text x="572.5" y="97.3" font-family="Space Grotesk, SF Mono, ui-monospace, monospace" font-size="11.5" fill="var(--fig-ink)" text-anchor="middle" font-weight="500">dell’artefatto</text><path d="M167,86 L178,86" fill="none" stroke="var(--fig-soft)" stroke-width="1.2" marker-end="url(#ah)"/><path d="M327,86 L338,86" fill="none" stroke="var(--fig-soft)" stroke-width="1.2" marker-end="url(#ah)"/><path d="M487,86 L498,86" fill="none" stroke="var(--fig-soft)" stroke-width="1.2" marker-end="url(#ah)"/><path d="M647,86 L787.0,86 L787.0,150" fill="none" stroke="var(--accent)" stroke-width="1.2" marker-end="url(#aha)"/><rect x="712" y="154" width="150" height="54" fill="none" stroke="var(--fig-ink)" stroke-width="1"/><text x="787.0" y="177.3" font-family="Space Grotesk, SF Mono, ui-monospace, monospace" font-size="11.5" fill="var(--fig-ink)" text-anchor="middle" font-weight="500">Elaborazione</text><text x="787.0" y="192.3" font-family="Space Grotesk, SF Mono, ui-monospace, monospace" font-size="11.5" fill="var(--fig-ink)" text-anchor="middle" font-weight="500">con modello esterno</text><rect x="160" y="154" width="340" height="54" fill="none" stroke="var(--fig-soft)" stroke-width="1" stroke-dasharray="4 3"/><text x="330.0" y="177.3" font-family="Space Grotesk, SF Mono, ui-monospace, monospace" font-size="11.5" fill="var(--fig-soft)" text-anchor="middle" font-weight="400">Vault — corrispondenza dato originale / surrogato</text><text x="330.0" y="192.3" font-family="Space Grotesk, SF Mono, ui-monospace, monospace" font-size="11.5" fill="var(--fig-soft)" text-anchor="middle" font-weight="400">non lascia l’appliance</text><path d="M412,110 L412,154" fill="none" stroke="var(--fig-soft)" stroke-width="1.2" stroke-dasharray="3 3"/><path d="M205,252 L205,208" fill="none" stroke="var(--fig-soft)" stroke-width="1.2" stroke-dasharray="3 3"/><path d="M787,208 L787,279.0 L644,279.0" fill="none" stroke="var(--accent)" stroke-width="1.2" marker-end="url(#aha)"/><rect x="490" y="252" width="150" height="54" fill="none" stroke="var(--fig-ink)" stroke-width="1"/><text x="565.0" y="275.3" font-family="Space Grotesk, SF Mono, ui-monospace, monospace" font-size="11.5" fill="var(--fig-ink)" text-anchor="middle" font-weight="500">Ritorno</text><text x="565.0" y="290.3" font-family="Space Grotesk, SF Mono, ui-monospace, monospace" font-size="11.5" fill="var(--fig-ink)" text-anchor="middle" font-weight="500">nel Caso</text><rect x="310" y="252" width="150" height="54" fill="none" stroke="var(--fig-ink)" stroke-width="1"/><text x="385.0" y="275.3" font-family="Space Grotesk, SF Mono, ui-monospace, monospace" font-size="11.5" fill="var(--fig-ink)" text-anchor="middle" font-weight="500">Riconciliazione</text><text x="385.0" y="290.3" font-family="Space Grotesk, SF Mono, ui-monospace, monospace" font-size="11.5" fill="var(--fig-ink)" text-anchor="middle" font-weight="500">dei riferimenti</text><rect x="130" y="252" width="150" height="54" fill="none" stroke="var(--fig-ink)" stroke-width="1"/><text x="205.0" y="275.3" font-family="Space Grotesk, SF Mono, ui-monospace, monospace" font-size="11.5" fill="var(--fig-ink)" text-anchor="middle" font-weight="500">Ripristino</text><text x="205.0" y="290.3" font-family="Space Grotesk, SF Mono, ui-monospace, monospace" font-size="11.5" fill="var(--fig-ink)" text-anchor="middle" font-weight="500">dei dati originali</text><path d="M488,279.0 L464,279.0" fill="none" stroke="var(--fig-soft)" stroke-width="1.2" marker-end="url(#ah)"/><path d="M308,279.0 L284,279.0" fill="none" stroke="var(--fig-soft)" stroke-width="1.2" marker-end="url(#ah)"/></svg><figcaption></figcaption></figure>
+<p>La linea verticale tratteggiata separa ciò che avviene nell'appliance da ciò che avviene fuori: la attraversano soltanto i due tratti in colore. Il riquadro tratteggiato al centro è il vault, che non la attraversa mai.</p>
+<p>Di questi passaggi uno solo avviene fuori dall'appliance, ed è quello che non richiede le informazioni sensibili. Tutti gli altri avvengono al suo interno; qui restano anche i dati originali e la mappa associata al Caso.</p>
+<p>Kalypto separa così due problemi che di norma vengono trattati insieme: dove devono rimanere le informazioni sensibili, e dove può avvenire l'elaborazione del contenuto che di quelle informazioni non ha bisogno.</p>
+<h2 id="s9">09 · Pseudonimizzazione non significa anonimizzazione assoluta</h2>
+<p>Per gli artefatti reversibili il termine corretto è pseudonimizzazione. Finché esiste una mappa che consente di ricondurre i surrogati ai dati originali, il documento non può essere considerato anonimo in senso assoluto. La reversibilità è una proprietà intenzionale del sistema: è ciò che permette al risultato elaborato di rientrare nel contesto reale da cui era stato temporaneamente separato.</p>
+<p>Nemmeno il ripristino è infallibile. Un sistema esterno può modificare un riferimento al punto da impedire una corrispondenza sufficientemente affidabile; in quel caso Kalypto esegue un ripristino parziale e lo segnala, invece di attribuire arbitrariamente un dato originale.</p>
+<p>La qualità del sistema non si misura quindi soltanto su quanto bene individua le informazioni sensibili, ma anche su quelle che sfuggono alla sostituzione, sulla sopravvivenza dei surrogati alle trasformazioni esterne, sulla quota di riferimenti ripristinati e sui casi in cui il ripristino degrada.</p>
+<h2 id="s10">10 · Glossario</h2>
+<p><strong>Anonimizzazione</strong> — trattamento che rende impossibile ricondurre un dato al soggetto cui si riferisce. Non è l'operazione svolta da Kalypto.</p>
+<p><strong>Appliance</strong> — apparato su cui Kalypto è installato ed eseguito, collocato presso l'utente (on-premise) e privo di connessione verso servizi esterni.</p>
+<p><strong>Artefatto</strong> — file prodotto a partire da un Caso e destinato all'uso esterno; contiene la sola versione pseudonimizzata del documento.</p>
+<p><strong>Caso</strong> — unità di lavoro che tiene insieme i documenti originali, le sostituzioni effettuate, il vault, gli artefatti estratti e i documenti che rientrano dopo l'elaborazione esterna.</p>
+<p><strong>Deterministico</strong> — comportamento in cui a parità di dati in ingresso corrisponde sempre lo stesso esito, senza margine di variazione.</p>
+<p><strong>LLM</strong> — modello linguistico addestrato su grandi quantità di testo. Nel documento compare in due ruoli distinti: in locale, per classificare informazioni che i livelli precedenti non risolvono; all'esterno, per elaborare il documento già pseudonimizzato.</p>
+<p><strong>Pseudonimizzazione</strong> — sostituzione delle informazioni sensibili con valori alternativi, conservando separatamente quanto serve a ricondurre i valori agli originali.</p>
+<p><strong>Quasi-identificatore</strong> — informazione che da sola non identifica una persona, ma che combinata con altre può consentirne la re-identificazione.</p>
+<p><strong>Riconciliazione vincolata</strong> — associazione di ciascun riferimento del documento rientrato a una delle entità note del Caso, oppure dichiarazione che il riferimento non è sufficientemente riconoscibile. Corrisponde a ciò che in letteratura è indicato come <em>constrained entity linking</em>.</p>
+<p><strong>Ripristino</strong> — operazione complessiva che riporta il documento elaborato all'esterno ai dati originali del Caso. È parziale e segnalato quando alcuni riferimenti non sono riconciliabili.</p>
+<p><strong>Sostituzione inversa</strong> — scambio del singolo surrogato con il dato originale corrispondente.</p>
+<p><strong>Surrogato</strong> — valore che sostituisce un'informazione sensibile nel documento pseudonimizzato, scelto per risultare plausibile e coerente con il contesto.</p>
+<p><strong>Vault</strong> — archivio locale, appartenente al Caso, in cui è registrata la corrispondenza tra ogni dato originale e il relativo surrogato. Il suo contenuto è indicato nel testo anche come mappa delle corrispondenze.</p>
+
+<footer>
+  <p class="mono" style="color:var(--ink)">A cura del Team HITL di UnmarkedPM e iride.ch SA con il concorso di sistemi di intelligenza artificiale. L'impiego di AI è dichiarato e intenzionale.</p>
+</footer>
+
+</div>
+
+<script>
+(function(){
+  var r=document.documentElement, b=document.getElementById('tt');
+  if(!b) return;
+  b.addEventListener('click',function(){
+    var t=(r.getAttribute('data-theme')==='light')?'dark':'light';
+    r.setAttribute('data-theme',t);
+    try{localStorage.setItem('unmarked-theme',t);}catch(e){}
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,79 @@
+name: pages
+
+# Publishes publications/ to GitHub Pages. No build step: the HTML renderings
+# are hand-crafted source files and are copied byte for byte, same approach
+# as UnmarkedPM/koord's method/ pipeline.
+#
+# Requires Settings -> Pages -> Source = "GitHub Actions", and the repository
+# to be public (GitHub Pages on the free plan is not available on private
+# repositories).
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'publications/**'
+      - '.github/workflows/pages.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    outputs:
+      has_content: ${{ steps.assemble.outputs.has_content }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Assemble the site
+        id: assemble
+        run: |
+          set -eu
+          mkdir -p site
+          count=0
+          if [ -f publications/index.html ]; then
+            cp publications/index.html site/index.html
+            count=$((count + 1))
+          fi
+          for pub in publications/*/; do
+            [ -d "$pub" ] || continue
+            name=$(basename "$pub")
+            mkdir -p "site/$name"
+            for f in "$pub"*.html "$pub"*.pdf; do
+              [ -e "$f" ] || continue
+              cp "$f" "site/$name/"
+              count=$((count + 1))
+            done
+          done
+          echo "Assembled $count file(s)."
+          if [ "$count" -eq 0 ]; then
+            echo "No publication present; skipping deploy."
+            echo "has_content=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "has_content=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Upload artifact
+        if: steps.assemble.outputs.has_content == 'true'
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+  deploy:
+    needs: build
+    if: needs.build.outputs.has_content == 'true'
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
